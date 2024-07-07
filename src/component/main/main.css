@@ -1,4 +1,38 @@
 .main {
-    background-color: green;
     height: 89vh;
+    background-color: #eef2f6;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .main-header {
+        background-color: white;
+        height: 60px;
+        margin-top: 10px;
+        margin-left: 180px;
+        margin-right: 180px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 15px;
+        padding-right: 15px;
+
+        .main-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    }
+
+    .main-pagination {
+        background-color: white;
+        height: 60px;
+        margin-left: 180px;
+        margin-right: 180px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+    }
 }
