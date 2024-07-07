@@ -7,6 +7,7 @@ import FaceRetouchingNaturalOutlinedIcon from '@mui/icons-material/FaceRetouchin
 import CloseIcon from '@mui/icons-material/Close'
 import parsePhoneNumberFromString from "libphonenumber-js";
 import { validate } from "email-validator";
+import { AddCustomerAPI } from "./CustomerAPI";
 
 function AddCustomer() {
     const { addCustomerIsActive, setAddCustomerIsActive } = useContext(ContextData)
@@ -135,6 +136,32 @@ function AddCustomer() {
             errCount++
         }
 
+
+        if (phone.value.length === 0) {
+            phone.style.color = 'red'
+            errCount++
+        }
+
+        if (password.value.length === 0) {
+            password.style.color = 'red'
+            errCount++
+        }
+
+
+        if (confirmPassword.value.length === 0) {
+            confirmPassword.style.color = 'red'
+            errCount++
+        }
+
+        if (errCount !== 0) {
+            if (gender.length === 0) {
+                genderM.style.color = 'red'
+                genderW.style.color = 'red'
+            }
+            return
+        }
+
+
         if (!validate(email.value)) {
             setSnackbarStatus('warning')
             setSnackbarMessage(
@@ -144,12 +171,6 @@ function AddCustomer() {
 
             email.style.color = 'red'
             return
-        }
-
-
-        if (phone.value.length === 0) {
-            phone.style.color = 'red'
-            errCount++
         }
 
         if (!parsePhoneNumberFromString(phone.value)?.isValid) {
@@ -162,11 +183,7 @@ function AddCustomer() {
             phone.style.color = 'red'
             return
         }
-
-        if (password.value.length === 0) {
-            password.style.color = 'red'
-            errCount++
-        }
+        
         if (password.value.length <= 6) {
             setSnackbarStatus('warning')
             setSnackbarMessage(
@@ -176,12 +193,6 @@ function AddCustomer() {
 
             password.style.color = 'red'
             return
-        }
-
-
-        if (confirmPassword.value.length === 0) {
-            confirmPassword.style.color = 'red'
-            errCount++
         }
 
         if (
@@ -198,13 +209,50 @@ function AddCustomer() {
             return
         }
 
-        if (errCount !== 0) {
-            if (gender.length === 0) {
-                genderM.style.color = 'red'
-                genderW.style.color = 'red'
-            }
-            return
-        }
+        (async () => {
+            await AddCustomerAPI(
+                phone.value,
+                firstName.value,
+                lastName.value,
+                middleName.value,
+                gender,
+                email.value
+            )
+                .then((response) => {
+                    if (response.status === 201) {
+                        setSnackbarStatus('success')
+                        setSnackbarMessage(
+                            'Customer is add success!'
+                        )
+
+                        setOpenSnackbar(true)
+                    }
+
+                    return
+                })
+                .catch((errorResponse) => {
+                    if (
+                        (errorResponse).response?.status === 409
+                    ) {
+                        setSnackbarStatus('error')
+                        const errorResponseData = (
+                            errorResponse 
+                        ).response?.data
+
+                        console.log(errorResponseData?.error)
+
+                        return
+                    } else {
+                        setSnackbarStatus('error')
+                        setSnackbarMessage(
+                            'Server Error!'
+                        )
+                        setOpenSnackbar(true)
+
+                        return
+                    }
+                })
+        })()
     }
 
     return (
@@ -212,7 +260,7 @@ function AddCustomer() {
             <div className="add-content">
                 <div className="header-top-up">
                     <div className="header-top-up-logo">
-                        <FaceRetouchingNaturalOutlinedIcon fontSize="small" />
+                        <FaceRetouchingNaturalOutlinedIcon fontSize="medium" />
                         Add customer
                     </div>
                     <Button
