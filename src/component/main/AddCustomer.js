@@ -1,16 +1,210 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import "./addCustomer.css"
 import { ContextData } from "../../context/ContextData";
 import { Button, Input } from "@mui/joy";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { Alert, FormControlLabel, Radio, RadioGroup, Snackbar } from "@mui/material";
 import FaceRetouchingNaturalOutlinedIcon from '@mui/icons-material/FaceRetouchingNaturalOutlined'
 import CloseIcon from '@mui/icons-material/Close'
+import parsePhoneNumberFromString from "libphonenumber-js";
+import { validate } from "email-validator";
 
 function AddCustomer() {
     const { addCustomerIsActive, setAddCustomerIsActive } = useContext(ContextData)
 
     function closeAddCustomer() {
         setAddCustomerIsActive(false)
+    }
+
+    const [gender, setGender] = useState('')
+
+    const choseGender = (event) => {
+        setGender(event.target.value)
+    }
+
+    const [openSnackbar, setOpenSnackbar] = useState(false)
+    const [snackbarStatus, setSnackbarStatus] = useState('success')
+    const [snackbarMessage, setSnackbarMessage] = useState('')
+
+    const snackbarClose = () => {
+        setOpenSnackbar(false)
+    }
+
+
+
+    function changeColor() {
+        const phone = document.getElementById(
+            'phone'
+        )
+
+        const lastName = document.getElementById(
+            'lastName'
+        )
+
+        const firstName = document.getElementById(
+            'firstName'
+        )
+
+        const email = document.getElementById(
+            'email'
+        )
+
+        const password = document.getElementById(
+            'password'
+        )
+
+        const confirmPassword = document.getElementById(
+            'confirmPassword'
+        )
+
+        const genderM = document.getElementById(
+            'genderCheckM'
+        )
+
+        const genderW = document.getElementById(
+            'genderCheckW'
+        )
+
+        phone.style.color = 'black'
+
+        email.style.color = 'black'
+
+        lastName.style.color = 'black'
+
+        firstName.style.color = 'black'
+
+        password.style.color = 'black'
+
+        confirmPassword.style.color = 'black'
+
+        genderM.style.color = 'black'
+
+        genderW.style.color = 'black'
+    }
+
+    function addCustomer () {
+        const lastName = document.getElementById(
+            'lastName'
+        )
+
+        const firstName = document.getElementById(
+            'firstName'
+        )
+
+        const middleName = document.getElementById(
+            'middleName'
+        )
+
+        const email = document.getElementById(
+            'email'
+        )
+
+        const password = document.getElementById(
+            'password'
+        )
+
+        const confirmPassword = document.getElementById(
+            'confirmPassword'
+        )
+
+        const phone = document.getElementById(
+            'phone'
+        )
+
+        const genderM = document.getElementById(
+            'genderCheckM'
+        )
+
+        const genderW = document.getElementById(
+            'genderCheckW'
+        )
+
+        let errCount = 0
+
+        if (lastName.value.length === 0) {
+            lastName.style.color = 'red'
+            errCount++
+        }
+
+        if (firstName.value.length === 0) {
+            firstName.style.color = 'red'
+            errCount++
+        }
+
+        if (email.value.length === 0) {
+            email.style.color = 'red'
+            errCount++
+        }
+
+        if (!validate(email.value)) {
+            setSnackbarStatus('warning')
+            setSnackbarMessage(
+                'Email is not valid!'
+            )
+            setOpenSnackbar(true)
+
+            email.style.color = 'red'
+            return
+        }
+
+
+        if (phone.value.length === 0) {
+            phone.style.color = 'red'
+            errCount++
+        }
+
+        if (!parsePhoneNumberFromString(phone.value)?.isValid) {
+            setSnackbarStatus('warning')
+            setSnackbarMessage(
+                'Phone format is not valid!'
+            )
+            setOpenSnackbar(true)
+
+            phone.style.color = 'red'
+            return
+        }
+
+        if (password.value.length === 0) {
+            password.style.color = 'red'
+            errCount++
+        }
+        if (password.value.length <= 6) {
+            setSnackbarStatus('warning')
+            setSnackbarMessage(
+                'Password must be more then 6!'
+            )
+            setOpenSnackbar(true)
+
+            password.style.color = 'red'
+            return
+        }
+
+
+        if (confirmPassword.value.length === 0) {
+            confirmPassword.style.color = 'red'
+            errCount++
+        }
+
+        if (
+            confirmPassword.value.length !==
+            password.value.length
+        ) {
+            setSnackbarStatus('warning')
+            setSnackbarMessage(
+                "Password repeat is not correct!"
+            )
+            setOpenSnackbar(true)
+
+            confirmPassword.style.color = 'red'
+            return
+        }
+
+        if (errCount !== 0) {
+            if (gender.length === 0) {
+                genderM.style.color = 'red'
+                genderW.style.color = 'red'
+            }
+            return
+        }
     }
 
     return (
@@ -49,7 +243,7 @@ function AddCustomer() {
                                 </td>
                                 <td style={{ paddingBottom: '15px' }}>
                                     <Input
-                                        // onClick={() => exchangeColor()}
+                                        onClick={changeColor}
                                         style={{
                                             color: 'black',
                                             minWidth: '350px',
@@ -78,7 +272,7 @@ function AddCustomer() {
                                 </td>
                                 <td style={{ paddingBottom: '15px' }}>
                                     <Input
-                                        // onClick={() => exchangeColor()}
+                                        onClick={changeColor}
                                         style={{
                                             color: 'black',
                                             minWidth: '350px',
@@ -98,7 +292,7 @@ function AddCustomer() {
                                 </td>
                                 <td style={{ paddingBottom: '15px' }}>
                                     <Input
-                                        // onClick={() => exchangeColor()}
+                                        onClick={changeColor}
                                         style={{
                                             color: 'black',
                                             minWidth: '350px',
@@ -130,12 +324,13 @@ function AddCustomer() {
                                         className="gender"
                                         aria-labelledby="gender"
                                         name="radio-buttons-group"
-                                        // onChange={choseGender}
-                                        // value={gender}
+                                        onChange={choseGender}
+                                        value={gender}
                                         style={{
                                             minWidth: '350px',
                                             maxWidth: '350px',
                                         }}
+                                        onClick={changeColor}
                                     >
                                         <FormControlLabel
                                             value="male"
@@ -169,7 +364,7 @@ function AddCustomer() {
                                 </td>
                                 <td style={{ paddingBottom: '15px' }}>
                                     <Input
-                                        // onClick={() => exchangeColor()}
+                                        onClick={changeColor}
                                         style={{
                                             color: 'black',
                                             minWidth: '350px',
@@ -198,7 +393,7 @@ function AddCustomer() {
                                 </td>
                                 <td style={{ paddingBottom: '15px' }}>
                                     <Input
-                                        // onClick={() => exchangeColor()}
+                                        onClick={changeColor}
                                         style={{
                                             color: 'black',
                                             minWidth: '350px',
@@ -234,7 +429,7 @@ function AddCustomer() {
                                             minWidth: '350px',
                                             maxWidth: '350px',
                                         }}
-                                        // onClick={() => exchangeColor()}
+                                        onClick={changeColor}
                                         placeholder='Input password'
                                     />
                                 </td>
@@ -258,7 +453,7 @@ function AddCustomer() {
                                     <Input
                                         id="confirmPassword"
                                         type='password'
-                                        // onClick={() => exchangeColor()}
+                                        onClick={changeColor}
                                         style={{
                                             color: 'black',
                                             minWidth: '350px',
@@ -278,13 +473,13 @@ function AddCustomer() {
                         Cancel
                     </Button>
                     <Button
-                        onClick={closeAddCustomer} size="lg" color="success"
+                        onClick={addCustomer} size="lg" color="success"
                     >
                         Confirm
                     </Button>
                 </div>
             </div>
-            {/* <Snackbar
+            <Snackbar
                 open={openSnackbar}
                 autoHideDuration={2000}
                 onClose={snackbarClose}
@@ -298,7 +493,7 @@ function AddCustomer() {
                 >
                     {snackbarMessage}
                 </Alert>
-            </Snackbar> */}
+            </Snackbar>
         </div>
     )
 }
