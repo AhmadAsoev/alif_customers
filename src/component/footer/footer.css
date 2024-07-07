@@ -1,0 +1,21 @@
+.footer {
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding-left: 40px;
+    gap: 10px;
+
+    .footer-title {
+        font-size: 18px;
+    }
+
+    .telegram {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        a { 
+            text-decoration: none;
+        }
+    }
+}

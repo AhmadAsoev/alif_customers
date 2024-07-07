@@ -1,0 +1,33 @@
+.main-table {
+    background-color: white;
+    height: 765px;
+    margin-left: 180px;
+    margin-right: 180px;
+    border-radius: 10px;
+
+    .main-info-row {
+        &:hover {
+            background-color: #ccfddd85;
+        }
+
+        img {
+            height: 44px;
+            width: 44px;
+            border-radius: 10px;
+        }
+
+        .main-info-row-view {
+            min-width: 0;
+            width: 30px;
+            height: 30px;
+            background-color: #e3f2fd;
+            color: #1e88e5;
+
+            &:hover {
+                background-color: #1e88e5;
+                color: #e3f2fd;
+                transition: 0.7s;
+            }
+        }
+    }
+}

@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Home from './page/home/Home';
+import NotFound from './page/notFound/NotFound';
+import { ContextProvider } from './context/ContextData';
+import AddCustomer from './component/main/AddCustomer';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ContextProvider>
+      <RouterProvider
+        router={createBrowserRouter([
+          {
+            path: '/',
+            element: (
+              <div>
+                <AddCustomer/>
+                <Home />
+              </div>
+            ),
+          },
+          {
+            path: '*',
+            element: <NotFound />,
+          },
+        ])}
+      />
+    </ContextProvider>
   );
 }
 
